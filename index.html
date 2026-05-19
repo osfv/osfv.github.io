@@ -6,6 +6,24 @@
   <title>iqad</title>
   <meta name="description" content="Discord bots, backend experiments, and small tools by Vince." />
   <meta name="theme-color" content="#050505" />
+
+  <!-- open graph for discord and other platforms -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://iqad.me" />
+  <meta property="og:title" content="iqad" />
+  <meta property="og:description" content="Find out more about me." />
+  <meta property="og:image" content="https://iqad.me/assets/iqad.png" />
+  <meta property="og:image:alt" content="iqad mark" />
+
+  <!-- X card-->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="iqad" />
+  <meta name="twitter:description" content="Find out more about me." />
+  <meta name="twitter:image" content="https://iqad.me/assets/iqad.png" />
+
+  <link rel="icon" type="image/png" href="/assets/iqad.png" />
+  <link rel="canonical" href="https://iqad.me" />
+
   <style>
     :root {
       color-scheme: dark;
@@ -36,8 +54,8 @@
         var(--bg);
       color: var(--muted);
       font: 450 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      letter-spacing: 0;
     }
+    ::selection { background: var(--text); color: var(--bg); }
 
     @view-transition { navigation: auto; }
     ::view-transition-old(root),
@@ -74,7 +92,6 @@
       font-size: 22px;
       line-height: 1.2;
       font-weight: 720;
-      letter-spacing: 0;
     }
     h1 .word {
       display: inline-block;
@@ -94,6 +111,7 @@
     p:nth-of-type(2) { animation-delay: 460ms; }
     p:nth-of-type(3) { animation-delay: 540ms; }
     p:nth-of-type(4) { animation-delay: 620ms; }
+    p:nth-of-type(5) { animation-delay: 720ms; }
 
     a {
       color: var(--link-rest);
@@ -116,18 +134,10 @@
       border-radius: 2px;
     }
 
-    @keyframes page-in {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes item-in {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes word-in {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes mark-in {
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    @keyframes page-in { to { opacity: 1; transform: translateY(0); } }
+    @keyframes item-in { to { opacity: 1; transform: translateY(0); } }
+    @keyframes word-in { to { opacity: 1; transform: translateY(0); } }
+    @keyframes mark-in { to { opacity: 1; transform: translateY(0) scale(1); } }
 
     @media (max-width: 560px) {
       main { padding-top: 118px; }
@@ -135,17 +145,11 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         animation: none !important;
         transition: none !important;
       }
-      main,
-      h1,
-      h1 .word,
-      p,
-      .mark {
+      main, h1, h1 .word, p, .mark {
         opacity: 1;
         transform: none;
       }
@@ -157,23 +161,26 @@
     <img class="mark" src="assets/iqad.png" alt="iqad mark" width="42" height="42" />
 
     <h1>
-      <span class="word" style="--i:0">Hey,</span>
-      <span class="word" style="--i:1">I'm</span>
-      <span class="word" style="--i:2">Vince.</span>
+      <span class="word" style="--i:0">hi,</span>
+      <span class="word" style="--i:1">i'm</span>
+      <span class="word" style="--i:2">iqad.</span>
     </h1>
 
     <p>
-      I make Discord bots, backend experiments, and small tools that are useful enough to keep alive.
+      i make Discord bots, and QOL tools.
     </p>
     <p>
-      Most of my code ends up on <a href="https://github.com/osfv">GitHub</a>.
-      The less serious side lives on <a href="https://iqad.baby">iqad.baby</a>.
+      most of my code is on <a href="https://github.com/osfv">GitHub</a>.
+      my less serious stuff is on <a href="https://iqad.baby">iqad.baby</a>.
     </p>
     <p>
-      Right now I'm learning more backend, hosting, and how to make bots less painful to run.
+      right now my main focus is on building and maintaining a couple of Discord bots for small servers.
     </p>
     <p>
-      You can reach me through <a href="https://github.com/osfv">GitHub</a>.
+      you can reach me through <a href="https://github.com/osfv">GitHub</a>, <a href="https://x.com/oxcipity">X</a>, or <a href="mailto:hi@iqad.baby">email</a> me.
+    </p>
+    <p>
+      <a href="/now">currently →</a>
     </p>
   </main>
 </body>

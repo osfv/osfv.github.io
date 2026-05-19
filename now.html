@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iqad — now</title>
+  <meta name="description" content="What Vince is up to lately." />
+  <meta name="theme-color" content="#050505" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://iqad.me/now" />
+  <meta property="og:title" content="iqad — now" />
+  <meta property="og:description" content="What I'm up to lately." />
+  <meta property="og:image" content="https://iqad.me/assets/iqad.png" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="iqad — now" />
+  <meta name="twitter:description" content="What I'm up to lately." />
+  <meta name="twitter:image" content="https://iqad.me/assets/iqad.png" />
+
+  <link rel="icon" type="image/png" href="/assets/iqad.png" />
+  <link rel="canonical" href="https://iqad.me/now" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: oklch(7% 0 0);
+      --text: oklch(94% 0 0);
+      --muted: oklch(63% 0 0);
+      --dim: oklch(40% 0 0);
+      --link-rest: oklch(48% 0 0);
+      --link-hover: oklch(100% 0 0);
+      --ease-out: cubic-bezier(.16, 1, .3, 1);
+      --ease-glide: cubic-bezier(.4, 0, .2, 1);
+    }
+    * { box-sizing: border-box; }
+    html {
+      min-height: 100%;
+      background: var(--bg);
+      scrollbar-width: none;
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar { display: none; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, .045), transparent 28%),
+        var(--bg);
+      color: var(--muted);
+      font: 450 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    ::selection { background: var(--text); color: var(--bg); }
+
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 320ms;
+      animation-timing-function: var(--ease-out);
+    }
+
+    main {
+      position: relative;
+      width: min(570px, calc(100vw - 32px));
+      margin-left: clamp(16px, 7vw, 112px);
+      padding-top: clamp(132px, 31vh, 245px);
+      padding-bottom: 80px;
+    }
+
+    /* Unified slide-in: each element sets its own --delay via inline style */
+    h1,
+    .stamp,
+    p,
+    .albums li {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slide-in 1000ms var(--ease-out) var(--delay, 0ms) both;
+      will-change: opacity, transform;
+    }
+
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      color: var(--text);
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 720;
+    }
+    .stamp {
+      margin: 0 0 24px;
+      color: var(--dim);
+      font-size: 13px;
+    }
+    p {
+      margin: 0 0 17px;
+    }
+
+    .albums {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .albums li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cover {
+      width: 52px;
+      height: 52px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: oklch(15% 0 0);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, .04) inset,
+        0 8px 20px -8px rgba(0, 0, 0, .6);
+      flex-shrink: 0;
+    }
+    .meta {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .track {
+      color: var(--text);
+      font-variation-settings: "wght" 540;
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .artist {
+      color: var(--dim);
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    a.song {
+      color: var(--muted);
+      font-variation-settings: "wght" 460;
+      text-decoration: none;
+      transition:
+        color 480ms var(--ease-glide),
+        font-variation-settings 480ms var(--ease-glide);
+    }
+    a.song:hover {
+      color: var(--link-hover);
+      font-variation-settings: "wght" 520;
+      transition:
+        color 360ms var(--ease-glide),
+        font-variation-settings 360ms var(--ease-glide);
+    }
+
+    a {
+      color: var(--link-rest);
+      text-decoration: none;
+      font-variation-settings: "wght" 500;
+      transition:
+        color 480ms var(--ease-glide),
+        font-variation-settings 480ms var(--ease-glide);
+    }
+    a:hover {
+      color: var(--link-hover);
+      font-variation-settings: "wght" 560;
+      transition:
+        color 360ms var(--ease-glide),
+        font-variation-settings 360ms var(--ease-glide);
+    }
+    a:focus-visible {
+      outline: 2px solid var(--link-hover);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+
+    @media (max-width: 560px) {
+      main { padding-top: 118px; }
+      body { font-size: 15.5px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      h1, .stamp, p, .albums li {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 style="--delay: 80ms">Now</h1>
+    <p class="stamp" style="--delay: 200ms">i update this page periodically :)</p>
+
+    <p style="--delay: 380ms">
+      i'm currently building Discord bots, and <a href="https://github.com/osfv/bravedebloater" target="_blank" rel="noopener">BraveDebloater</a>.
+    </p>
+    <p style="--delay: 500ms">
+      learning more about backend, hosting.
+    </p>
+    <p style="--delay: 620ms">
+      on the side, i love astronomy. my favorite planet is <a href="https://science.nasa.gov/gallery/saturn/" target="_blank" rel="noopener">Saturn</a>.
+    </p>
+    <p style="--delay: 740ms">
+      i love listening to music and podcasts while working. some recent favorites:
+    </p>
+
+    <ul class="albums">
+      <li style="--delay: 900ms">
+        <img class="cover" src="/assets/albums/emotions.jpg" alt="EMOTIONS by Nine Vicious" width="52" height="52" />
+        <span class="meta">
+          <span class="track">EMOTIONS - <a class="song" href="https://open.spotify.com/search/Amazing%20Nine%20Vicious" target="_blank" rel="noopener">Amazing</a></span>
+          <span class="artist">Nine Vicious</span>
+        </span>
+      </li>
+      <li style="--delay: 1000ms">
+        <img class="cover" src="/assets/albums/iceman.jpg" alt="ICEMAN by Drake" width="52" height="52" />
+        <span class="meta">
+          <span class="track">ICEMAN - <a class="song" href="https://open.spotify.com/search/Ran%20To%20Atlanta%20Drake" target="_blank" rel="noopener">Ran To Atlanta</a></span>
+          <span class="artist">Drake</span>
+        </span>
+      </li>
+      <li style="--delay: 1100ms">
+        <img class="cover" src="/assets/albums/paranoia.jpg" alt="Paranoia by Marwick" width="52" height="52" />
+        <span class="meta">
+          <span class="track">Paranoia - <a class="song" href="https://open.spotify.com/search/Narcolepsy%20Marwick" target="_blank" rel="noopener">Narcolepsy</a></span>
+          <span class="artist">Marwick</span>
+        </span>
+      </li>
+    </ul>
+
+    <p style="--delay: 1260ms">
+      <a href="/">← back</a>
+    </p>
+  </main>
+</body>
+</html>
