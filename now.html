@@ -6,21 +6,20 @@
   <title>iqad — now</title>
   <meta name="description" content="What Vince is up to lately." />
   <meta name="theme-color" content="#050505" />
-
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://iqad.me/now" />
   <meta property="og:title" content="iqad — now" />
   <meta property="og:description" content="What I'm up to lately." />
   <meta property="og:image" content="https://iqad.me/assets/iqad.png" />
-
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="iqad — now" />
   <meta name="twitter:description" content="What I'm up to lately." />
   <meta name="twitter:image" content="https://iqad.me/assets/iqad.png" />
-
   <link rel="icon" type="image/png" href="/assets/iqad.png" />
   <link rel="canonical" href="https://iqad.me/now" />
-
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       color-scheme: dark;
@@ -115,31 +114,55 @@
     p {
       margin: 0 0 17px;
     }
-
+    .section-label {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin: 0 0 14px;
+    }
     .albums {
       list-style: none;
       padding: 0;
       margin: 0 0 22px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
     }
     .albums li {
-      display: flex;
+      display: grid;
+      grid-template-columns: 22px 52px 1fr;
       align-items: center;
       gap: 14px;
+      padding: 11px 0;
+      border-bottom: 1px solid oklch(19% 0 0);
     }
-
+    .albums li:first-child { border-top: 1px solid oklch(19% 0 0); }
+    .idx {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--dim);
+      transition: color 380ms var(--ease-glide);
+    }
+    .albums li:hover .idx { color: var(--text); }
     .cover {
       width: 52px;
       height: 52px;
-      border-radius: 6px;
+      border-radius: 3px;
       object-fit: cover;
       background: oklch(15% 0 0);
       box-shadow:
         0 1px 0 rgba(255, 255, 255, .04) inset,
         0 8px 20px -8px rgba(0, 0, 0, .6);
-      flex-shrink: 0;
+      filter: grayscale(1) brightness(.82);
+      transition:
+        filter 480ms var(--ease-glide),
+        transform 480ms var(--ease-out);
+      will-change: filter, transform;
+    }
+    .albums li:hover .cover {
+      filter: grayscale(0) brightness(1);
+      transform: scale(1.05) translateY(-1px);
     }
     .meta {
       display: flex;
@@ -222,21 +245,23 @@
       learning more about backend, hosting.
     </p>
     <p style="--delay: 620ms">
-      on the side, i love astronomy. my favorite planet is <a href="https://science.nasa.gov/gallery/saturn/" target="_blank" rel="noopener">Saturn</a>.
+      on the side, i love astronomy. my favorite planet is <a id="saturn-link" href="https://science.nasa.gov/gallery/saturn/" target="_blank" rel="noopener">Saturn</a><canvas class="saturn" width="32" height="32" aria-hidden="true"></canvas>.
     </p>
     <p style="--delay: 740ms">
-      i love listening to music and podcasts while working. some recent favorites:
+      i love listening to music and podcasts while working.
     </p>
-
+    <p class="section-label" style="--delay: 840ms">on repeat</p>
     <ul class="albums">
-      <li style="--delay: 900ms">
+      <li style="--delay: 920ms">
+        <span class="idx">01</span>
         <img class="cover" src="/assets/albums/emotions.jpg" alt="EMOTIONS by Nine Vicious" width="52" height="52" />
         <span class="meta">
           <span class="track">EMOTIONS - <a class="song" href="https://open.spotify.com/search/Amazing%20Nine%20Vicious" target="_blank" rel="noopener">Amazing</a></span>
           <span class="artist">Nine Vicious</span>
         </span>
       </li>
-      <li style="--delay: 1000ms">
+      <li style="--delay: 1010ms">
+        <span class="idx">02</span>
         <img class="cover" src="/assets/albums/iceman.jpg" alt="ICEMAN by Drake" width="52" height="52" />
         <span class="meta">
           <span class="track">ICEMAN - <a class="song" href="https://open.spotify.com/search/Ran%20To%20Atlanta%20Drake" target="_blank" rel="noopener">Ran To Atlanta</a></span>
@@ -244,6 +269,7 @@
         </span>
       </li>
       <li style="--delay: 1100ms">
+        <span class="idx">03</span>
         <img class="cover" src="/assets/albums/paranoia.jpg" alt="Paranoia by Marwick" width="52" height="52" />
         <span class="meta">
           <span class="track">Paranoia - <a class="song" href="https://open.spotify.com/search/Narcolepsy%20Marwick" target="_blank" rel="noopener">Narcolepsy</a></span>
@@ -251,10 +277,268 @@
         </span>
       </li>
     </ul>
-
     <p style="--delay: 1260ms">
       <a href="/">← back</a>
     </p>
   </main>
+
+  <script>
+    // ---- "updated X days ago" stamp -------------------------------------
+    (() => {
+      const el = document.getElementById('stamp');
+      if (!el) return;
+      const LAST_UPDATED = '2026-05-28';        // <-- set this when you update the page
+      const then = new Date(LAST_UPDATED + 'T00:00:00');
+      const today = new Date();
+      const days = Math.floor(
+        (Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) -
+         Date.UTC(then.getFullYear(), then.getMonth(), then.getDate())) / 86400000
+      );
+      el.textContent =
+        days <= 0 ? 'updated today' :
+        days === 1 ? 'updated yesterday' :
+        'updated ' + days + ' days ago';
+    })();
+
+    // ---- dot face — naps sometimes (now page) ---------------------------
+    (() => {
+      const canvas = document.querySelector('canvas.mark');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      const GRID = 12;
+      const SIZE = 56;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      canvas.width = SIZE * dpr;
+      canvas.height = SIZE * dpr;
+      canvas.style.width = SIZE + 'px';
+      canvas.style.height = SIZE + 'px';
+      ctx.scale(dpr, dpr);
+
+      const cell = SIZE / GRID;
+      const radius = cell * 0.36;
+
+      const L_OPEN  = [[3,3],[4,3],[3,4],[4,4]];
+      const R_OPEN  = [[7,3],[8,3],[7,4],[8,4]];
+      const L_SHUT  = [[3,4],[4,4]];
+      const R_SHUT  = [[7,4],[8,4]];
+      const M_FLAT  = [[4,8],[5,8],[6,8],[7,8]];
+      const M_SMILE = [[3,7],[4,8],[5,9],[6,9],[7,8],[8,7]];
+      const M_SMALL = [[5,8],[6,8]];               // sleepy closed mouth
+      const M_SNORE = [[5,8],[6,8],[5,9],[6,9]];   // little open 'o' on inhale
+
+      const faces = {
+        awake: [...L_OPEN, ...R_OPEN, ...M_FLAT],
+        happy: [...L_OPEN, ...R_OPEN, ...M_SMILE],
+        wink:  [...L_OPEN, ...R_SHUT, ...M_SMILE],
+        blink: [...L_SHUT, ...R_SHUT, ...M_FLAT],
+      };
+
+      const target = new Float32Array(GRID * GRID);
+      const cur = new Float32Array(GRID * GRID);
+      const at = (c, r) => r * GRID + c;
+
+      function setTarget(cells) {
+        target.fill(0);
+        for (const [c, r] of cells) target[at(c, r)] = 1;
+      }
+
+      let mode = 'awake';    // 'awake' | 'sleep'
+      let hovering = false;
+      let sleepAmt = 0;      // eased 1 while asleep (drives the Zzz)
+
+      const zzz = [0, 0.34, 0.67];
+
+      function drawZ(x, y, s, a) {
+        const cells = [[0,0],[1,0],[2,0],[1,1],[0,2],[1,2],[2,2]];
+        ctx.fillStyle = 'rgba(255,255,255,' + a + ')';
+        for (const [gx, gy] of cells) {
+          ctx.beginPath();
+          ctx.arc(x + gx * s, y + gy * s, s * 0.42, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function render(bob) {
+        ctx.clearRect(0, 0, SIZE, SIZE);
+        for (let r = 0; r < GRID; r++) {
+          for (let c = 0; c < GRID; c++) {
+            const v = cur[at(c, r)];
+            if (v < 0.012) continue;
+            const rad = radius * (0.5 + 0.5 * v);
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255,255,255,' + v + ')';
+            ctx.arc(c * cell + cell / 2, r * cell + cell / 2 + bob, rad, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        // Zzz drift up-and-away to the upper-right, well clear of the head
+        if (sleepAmt > 0.02) {
+          const t = performance.now() / 2600;
+          for (const off of zzz) {
+            const p = (t + off) % 1;
+            const x = 43 + p * 11;
+            const y = 24 - p * 26;
+            const s = 1.5 + p * 1.5;
+            const a = sleepAmt * Math.sin(Math.PI * p) * 0.85;
+            if (a > 0.01) drawZ(x, y, s, a);
+          }
+        }
+      }
+
+      setTarget(faces.awake);
+
+      if (reduce) { cur.set(target); render(0); return; }
+
+      function tick() {
+        const now = performance.now() / 1000;
+        const breath = (Math.sin(now * 1.15) + 1) / 2;
+        const bob = Math.sin(now * 1.15) * 0.7;
+
+        sleepAmt += ((mode === 'sleep' ? 1 : 0) - sleepAmt) * 0.08;
+
+        if (mode === 'sleep') {
+          const mouth = breath > 0.62 ? M_SNORE : M_SMALL;
+          setTarget([...L_SHUT, ...R_SHUT, ...mouth]);
+        }
+
+        for (let i = 0; i < cur.length; i++) cur[i] += (target[i] - cur[i]) * 0.2;
+        render(mode === 'sleep' ? bob : bob * 0.3);
+        requestAnimationFrame(tick);
+      }
+      tick();
+
+      // little expressions while awake
+      function awakeIdle() {
+        if (mode === 'awake' && !hovering) {
+          const roll = Math.random();
+          if (roll < 0.55) {
+            setTarget(faces.blink);
+            setTimeout(() => { if (mode === 'awake' && !hovering) setTarget(faces.awake); }, 120);
+          } else if (roll < 0.8) {
+            setTarget(faces.happy);
+            setTimeout(() => { if (mode === 'awake' && !hovering) setTarget(faces.awake); }, 900);
+          } else {
+            setTarget(faces.wink);
+            setTimeout(() => { if (mode === 'awake' && !hovering) setTarget(faces.awake); }, 520);
+          }
+        }
+        setTimeout(awakeIdle, 1600 + Math.random() * 2600);
+      }
+      setTimeout(awakeIdle, 1600);
+
+      // autonomous nap cycle: awake ~10–16s, asleep ~9–16s
+      let cycle;
+      function scheduleCycle() {
+        clearTimeout(cycle);
+        const dur = mode === 'awake' ? 10000 + Math.random() * 6000
+                                     : 9000 + Math.random() * 7000;
+        cycle = setTimeout(() => {
+          if (!hovering) {
+            mode = mode === 'awake' ? 'sleep' : 'awake';
+            if (mode === 'awake') setTarget(faces.awake);
+          }
+          scheduleCycle();
+        }, dur);
+      }
+      scheduleCycle();
+
+      // interactions: wake on hover, startle on click
+      canvas.addEventListener('pointerenter', () => {
+        hovering = true; mode = 'awake'; setTarget(faces.happy);
+      });
+      canvas.addEventListener('pointerleave', () => {
+        hovering = false; setTarget(faces.awake); scheduleCycle();
+      });
+      canvas.addEventListener('pointerdown', () => {
+        mode = 'awake';
+        setTarget(faces.blink);
+        setTimeout(() => { if (mode === 'awake') setTarget(faces.happy); }, 150);
+      });
+    })();
+
+    // ---- dot Saturn — moon orbits on hover ------------------------------
+    (() => {
+      const canvas = document.querySelector('canvas.saturn');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const S = 32;
+      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      canvas.width = S * dpr;
+      canvas.height = S * dpr;
+      canvas.style.width = S + 'px';
+      canvas.style.height = S + 'px';
+      ctx.scale(dpr, dpr);
+
+      const cx = S / 2, cy = S / 2;
+      const R = 6;              // planet radius
+      const rx = 12.5, ry = 4;  // ring (flat plane)
+      const mrx = 13, mry = 10; // moon orbit (steeper plane)
+      const dot = 0.95;
+      const N = 40;
+
+      const body = [];
+      for (let y = -R; y <= R; y += 2.2)
+        for (let x = -R; x <= R; x += 2.2)
+          if (x * x + y * y <= R * R) body.push([x, y]);
+
+      function dotAt(x, y, a, r) {
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(255,255,255,' + a + ')';
+        ctx.arc(x, y, r || dot, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      let ringSpeed = 0.35, ringTarget = 0.35, ringPhase = 0;
+      let moonAmt = 0, moonTarget = 0, moonPhase = 0;
+      let last = 0;
+
+      function frame(t) {
+        const dt = last ? t - last : 16; last = t;
+        ringSpeed += (ringTarget - ringSpeed) * 0.07;
+        moonAmt   += (moonTarget - moonAmt) * 0.08;
+        ringPhase += (dt / 3200) * ringSpeed;
+        moonPhase += (dt / 2400) * (0.5 + 2.5 * moonAmt);
+
+        ctx.clearRect(0, 0, S, S);
+
+        const ringBack = [], ringFront = [];
+        for (let i = 0; i < N; i++) {
+          const a = (i / N) * Math.PI * 2 + ringPhase;
+          const x = cx + rx * Math.cos(a);
+          const y = cy + ry * Math.sin(a);
+          (Math.sin(a) > 0 ? ringFront : ringBack).push([x, y]);
+        }
+
+        const ma = moonPhase;
+        const mx = cx + mrx * Math.cos(ma);
+        const my = cy + mry * Math.sin(ma);
+        const moonFront = Math.sin(ma) > 0;
+
+        for (const [x, y] of ringBack) dotAt(x, y, 0.3);
+        if (moonAmt > 0.02 && !moonFront) dotAt(mx, my, 0.4 * moonAmt, 1.4);
+        for (const [bx, by] of body) dotAt(cx + bx, cy + by, 0.92);
+        for (const [x, y] of ringFront) dotAt(x, y, 0.72);
+        if (moonAmt > 0.02 && moonFront) dotAt(mx, my, 0.95 * moonAmt, 1.5);
+
+        if (!reduce) requestAnimationFrame(frame);
+      }
+
+      if (reduce) frame(0); else requestAnimationFrame(frame);
+
+      const link = document.getElementById('saturn-link');
+      const on  = () => { ringTarget = 3.2; moonTarget = 1; };
+      const off = () => { ringTarget = 0.35; moonTarget = 0; };
+      [canvas, link].forEach(el => {
+        if (!el) return;
+        el.addEventListener('pointerenter', on);
+        el.addEventListener('pointerleave', off);
+      });
+    })();
+  </script>
 </body>
 </html>
