@@ -6,7 +6,6 @@
   <title>iqad</title>
   <meta name="description" content="Discord bots, backend experiments, and small tools by Vince." />
   <meta name="theme-color" content="#050505" />
-
   <!-- open graph for discord and other platforms -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://iqad.me" />
@@ -14,16 +13,13 @@
   <meta property="og:description" content="Find out more about me." />
   <meta property="og:image" content="https://iqad.me/assets/iqad.png" />
   <meta property="og:image:alt" content="iqad mark" />
-
   <!-- X card-->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="iqad" />
   <meta name="twitter:description" content="Find out more about me." />
   <meta name="twitter:image" content="https://iqad.me/assets/iqad.png" />
-
   <link rel="icon" type="image/png" href="/assets/iqad.png" />
   <link rel="canonical" href="https://iqad.me" />
-
   <style>
     :root {
       color-scheme: dark;
@@ -56,14 +52,12 @@
       font: 450 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     ::selection { background: var(--text); color: var(--bg); }
-
     @view-transition { navigation: auto; }
     ::view-transition-old(root),
     ::view-transition-new(root) {
       animation-duration: 320ms;
       animation-timing-function: var(--ease-out);
     }
-
     main {
       position: relative;
       width: min(570px, calc(100vw - 32px));
@@ -100,7 +94,6 @@
       animation: word-in 720ms var(--ease-out) both;
       animation-delay: calc(200ms + var(--i, 0) * 70ms);
     }
-
     p {
       margin: 0 0 17px;
       opacity: 0;
@@ -112,7 +105,6 @@
     p:nth-of-type(3) { animation-delay: 540ms; }
     p:nth-of-type(4) { animation-delay: 620ms; }
     p:nth-of-type(5) { animation-delay: 720ms; }
-
     a {
       color: var(--link-rest);
       text-decoration: none;
@@ -133,17 +125,14 @@
       outline-offset: 4px;
       border-radius: 2px;
     }
-
     @keyframes page-in { to { opacity: 1; transform: translateY(0); } }
     @keyframes item-in { to { opacity: 1; transform: translateY(0); } }
     @keyframes word-in { to { opacity: 1; transform: translateY(0); } }
     @keyframes mark-in { to { opacity: 1; transform: translateY(0) scale(1); } }
-
     @media (max-width: 560px) {
       main { padding-top: 118px; }
       body { font-size: 15.5px; }
     }
-
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation: none !important;
