@@ -66,7 +66,25 @@
       padding-top: clamp(132px, 31vh, 245px);
       padding-bottom: 80px;
     }
-
+    .mark {
+      display: block;
+      width: 56px;
+      height: 56px;
+      margin-bottom: 22px;
+      opacity: 0;
+      transform: translateY(7px) scale(.96);
+      animation: mark-in 820ms var(--ease-out) 80ms both;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .saturn {
+      display: inline-block;
+      vertical-align: middle;
+      width: 32px;
+      height: 32px;
+      margin: 0 1px 0 5px;
+      cursor: pointer;
+    }
     /* Unified slide-in: each element sets its own --delay via inline style */
     h1,
     .stamp,
@@ -77,12 +95,11 @@
       animation: slide-in 1000ms var(--ease-out) var(--delay, 0ms) both;
       will-change: opacity, transform;
     }
-
     @keyframes slide-in {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
+    @keyframes mark-in { to { opacity: 1; transform: translateY(0) scale(1); } }
     h1 {
       margin: 0 0 6px;
       color: var(--text);
@@ -195,9 +212,9 @@
 </head>
 <body>
   <main>
+    <canvas class="mark" width="56" height="56" role="img" aria-label="iqad — animated dot face"></canvas>
     <h1 style="--delay: 80ms">Now</h1>
-    <p class="stamp" style="--delay: 200ms">i update this page periodically :)</p>
-
+    <p class="stamp" id="stamp" style="--delay: 200ms">updated recently</p>
     <p style="--delay: 380ms">
       i'm currently building Discord bots, and <a href="https://github.com/osfv/bravedebloater" target="_blank" rel="noopener">BraveDebloater</a>.
     </p>

@@ -68,18 +68,17 @@
       transform: translateY(8px);
       animation: page-in 900ms var(--ease-out) forwards;
     }
-
     .mark {
-      display: block;
-      width: 42px;
-      height: 42px;
-      margin-bottom: 20px;
-      opacity: 0;
-      transform: translateY(7px) scale(.96);
-      animation: mark-in 820ms var(--ease-out) 100ms both;
-      image-rendering: -webkit-optimize-contrast;
+    display: block;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 22px;
+    opacity: 0;
+    transform: translateY(7px) scale(.96);
+    animation: mark-in 820ms var(--ease-out) 100ms both;
+    cursor: pointer;
+    touch-action: manipulation;
     }
-
     h1 {
       margin: 0 0 22px;
       color: var(--text);
@@ -147,14 +146,12 @@
 </head>
 <body>
   <main>
-    <img class="mark" src="assets/iqad.png" alt="iqad mark" width="42" height="42" />
-
+    <canvas class="mark" width="42" height="42" role="img" aria-label="iqad — animated dot face"></canvas>
     <h1>
       <span class="word" style="--i:0">hi,</span>
       <span class="word" style="--i:1">i'm</span>
       <span class="word" style="--i:2">iqad.</span>
     </h1>
-
     <p>
       i make Discord bots, and QOL tools.
     </p>
@@ -172,5 +169,113 @@
       <a href="/now">currently →</a>
     </p>
   </main>
+
+  <script>
+  (() => {
+    const canvas = document.querySelector('canvas.mark');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const GRID = 12;          // dots per side
+    const SIZE = 56;          // css px — bump this (+ .mark width/height) for a bigger face
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // crisp on retina
+    const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+    canvas.width = SIZE * dpr;
+    canvas.height = SIZE * dpr;
+    canvas.style.width = SIZE + 'px';
+    canvas.style.height = SIZE + 'px';
+    ctx.scale(dpr, dpr);
+
+    const cell = SIZE / GRID;
+    const radius = cell * 0.36;
+
+    // feature dots [col, row] — face sits cols 3–8, rows 3–9
+    const L_OPEN  = [[3,3],[4,3],[3,4],[4,4]];
+    const R_OPEN  = [[7,3],[8,3],[7,4],[8,4]];
+    const L_SHUT  = [[3,4],[4,4]];
+    const R_SHUT  = [[7,4],[8,4]];
+    const M_FLAT  = [[4,8],[5,8],[6,8],[7,8]];
+    const M_SMILE = [[3,7],[4,8],[5,9],[6,9],[7,8],[8,7]];
+
+    const faces = {
+      neutral: [...L_OPEN, ...R_OPEN, ...M_FLAT],
+      smile:   [...L_OPEN, ...R_OPEN, ...M_SMILE],
+      wink:    [...L_OPEN, ...R_SHUT, ...M_SMILE],
+      blink:   [...L_SHUT, ...R_SHUT, ...M_FLAT],
+    };
+
+    const target = new Float32Array(GRID * GRID);
+    const cur = new Float32Array(GRID * GRID);
+    const at = (c, r) => r * GRID + c;
+
+    function setFace(name) {
+      target.fill(0);
+      for (const [c, r] of faces[name]) target[at(c, r)] = 1;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, SIZE, SIZE);
+      const bob = reduce ? 0 : Math.sin(performance.now() / 1000 * 1.4) * 0.4;
+      for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+          const v = cur[at(c, r)];
+          if (v < 0.012) continue;            // only lit (white) dots show
+          const rad = radius * (0.5 + 0.5 * v); // scale-in for smoothness
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(255,255,255,' + v + ')';
+          ctx.arc(c * cell + cell / 2, r * cell + cell / 2 + bob, rad, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    setFace('neutral');
+
+    if (reduce) {
+      cur.set(target);
+      draw();
+      return;
+    }
+
+    function tick() {
+      for (let i = 0; i < cur.length; i++) {
+        cur[i] += (target[i] - cur[i]) * 0.2; // smooth morph
+      }
+      draw();
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // idle expression scheduler
+    let hovering = false;
+    function schedule() {
+      if (!hovering) {
+        const roll = Math.random();
+        if (roll < 0.5) {            // blink
+          setFace('blink');
+          setTimeout(() => { if (!hovering) setFace('neutral'); }, 120);
+        } else if (roll < 0.74) {    // quick smile
+          setFace('smile');
+          setTimeout(() => { if (!hovering) setFace('neutral'); }, 900);
+        } else if (roll < 0.88) {    // wink
+          setFace('wink');
+          setTimeout(() => { if (!hovering) setFace('neutral'); }, 520);
+        }
+      }
+      setTimeout(schedule, 1500 + Math.random() * 2800);
+    }
+    setTimeout(schedule, 1600);
+
+    // interactions
+    canvas.addEventListener('pointerenter', () => { hovering = true; setFace('smile'); });
+    canvas.addEventListener('pointerleave', () => { hovering = false; setFace('neutral'); });
+    canvas.addEventListener('pointerdown', () => {
+      setFace('wink');
+      setTimeout(() => setFace(hovering ? 'smile' : 'neutral'), 480);
+    });
+  })();
+</script>
 </body>
 </html>
