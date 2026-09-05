@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>iqad — now</title>
   <meta name="description" content="What Vince is up to lately." />
-  <meta name="theme-color" content="#050505" />
+  <meta name="theme-color" content="#141414" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://iqad.me/now" />
   <meta property="og:title" content="iqad — now" />
@@ -17,225 +17,17 @@
   <meta name="twitter:image" content="https://iqad.me/assets/iqad.png" />
   <link rel="icon" type="image/png" href="/assets/iqad.png" />
   <link rel="canonical" href="https://iqad.me/now" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="preload" href="assets/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="site.css?v=10" />
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: oklch(7% 0 0);
-      --text: oklch(94% 0 0);
-      --muted: oklch(63% 0 0);
-      --dim: oklch(40% 0 0);
-      --link-rest: oklch(48% 0 0);
-      --link-hover: oklch(100% 0 0);
-      --ease-out: cubic-bezier(.16, 1, .3, 1);
-      --ease-glide: cubic-bezier(.4, 0, .2, 1);
-    }
-    * { box-sizing: border-box; }
-    html {
-      min-height: 100%;
-      background: var(--bg);
-      scrollbar-width: none;
-    }
-    html::-webkit-scrollbar,
-    body::-webkit-scrollbar { display: none; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      overflow-x: hidden;
-      scrollbar-width: none;
-      background:
-        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, .045), transparent 28%),
-        var(--bg);
-      color: var(--muted);
-      font: 450 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    ::selection { background: var(--text); color: var(--bg); }
-    @view-transition { navigation: auto; }
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-      animation-duration: 320ms;
-      animation-timing-function: var(--ease-out);
-    }
-    main {
-      position: relative;
-      width: min(570px, calc(100vw - 32px));
-      margin-left: clamp(16px, 7vw, 112px);
-      padding-top: clamp(132px, 31vh, 245px);
-      padding-bottom: 80px;
-    }
-    .mark {
-      display: block;
-      width: 56px;
-      height: 56px;
-      margin-bottom: 22px;
-      opacity: 0;
-      transform: translateY(7px) scale(.96);
-      animation: mark-in 820ms var(--ease-out) 80ms both;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-    .saturn {
-      display: inline-block;
-      vertical-align: middle;
-      width: 32px;
-      height: 32px;
-      margin: 0 1px 0 5px;
-      cursor: pointer;
-    }
-    /* Unified slide-in: each element sets its own --delay via inline style */
-    h1,
-    .stamp,
-    p,
-    .albums li {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: slide-in 1000ms var(--ease-out) var(--delay, 0ms) both;
-      will-change: opacity, transform;
-    }
-    @keyframes slide-in {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes mark-in { to { opacity: 1; transform: translateY(0) scale(1); } }
-    h1 {
-      margin: 0 0 6px;
-      color: var(--text);
-      font-size: 22px;
-      line-height: 1.2;
-      font-weight: 720;
-    }
-    .stamp {
-      margin: 0 0 24px;
-      color: var(--dim);
-      font-size: 13px;
-    }
-    p {
-      margin: 0 0 17px;
-    }
-    .section-label {
-      font-family: "Silkscreen", ui-monospace, monospace;
-      font-size: 10px;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      color: var(--dim);
-      margin: 0 0 14px;
-    }
-    .albums {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 22px;
-      display: flex;
-      flex-direction: column;
-    }
-    .albums li {
-      display: grid;
-      grid-template-columns: 22px 52px 1fr;
-      align-items: center;
-      gap: 14px;
-      padding: 11px 0;
-      border-bottom: 1px solid oklch(19% 0 0);
-    }
-    .albums li:first-child { border-top: 1px solid oklch(19% 0 0); }
-    .idx {
-      font-family: "Silkscreen", ui-monospace, monospace;
-      font-size: 11px;
-      color: var(--dim);
-      transition: color 380ms var(--ease-glide);
-    }
-    .albums li:hover .idx { color: var(--text); }
-    .cover {
-      width: 52px;
-      height: 52px;
-      border-radius: 3px;
-      object-fit: cover;
-      background: oklch(15% 0 0);
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, .04) inset,
-        0 8px 20px -8px rgba(0, 0, 0, .6);
-      filter: grayscale(1) brightness(.82);
-      transition:
-        filter 480ms var(--ease-glide),
-        transform 480ms var(--ease-out);
-      will-change: filter, transform;
-    }
-    .albums li:hover .cover {
-      filter: grayscale(0) brightness(1);
-      transform: scale(1.05) translateY(-1px);
-    }
-    .meta {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    .track {
-      color: var(--text);
-      font-variation-settings: "wght" 540;
-      line-height: 1.3;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .artist {
-      color: var(--dim);
-      font-size: 14px;
-      line-height: 1.3;
-    }
-    a.song {
-      color: var(--muted);
-      font-variation-settings: "wght" 460;
-      text-decoration: none;
-      transition:
-        color 480ms var(--ease-glide),
-        font-variation-settings 480ms var(--ease-glide);
-    }
-    a.song:hover {
-      color: var(--link-hover);
-      font-variation-settings: "wght" 520;
-      transition:
-        color 360ms var(--ease-glide),
-        font-variation-settings 360ms var(--ease-glide);
-    }
-    a {
-      color: var(--link-rest);
-      text-decoration: none;
-      font-variation-settings: "wght" 500;
-      transition:
-        color 480ms var(--ease-glide),
-        font-variation-settings 480ms var(--ease-glide);
-    }
-    a:hover {
-      color: var(--link-hover);
-      font-variation-settings: "wght" 560;
-      transition:
-        color 360ms var(--ease-glide),
-        font-variation-settings 360ms var(--ease-glide);
-    }
-    a:focus-visible {
-      outline: 2px solid var(--link-hover);
-      outline-offset: 4px;
-      border-radius: 2px;
-    }
-    @media (max-width: 560px) {
-      main { padding-top: 118px; }
-      body { font-size: 15.5px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-      }
-      h1, .stamp, p, .albums li, .mark {
-        opacity: 1;
-        transform: none;
-      }
-    }
+    html:not(.is-ready) main{visibility:hidden}
+    html:not(.is-tracks) .section-label,
+    html:not(.is-tracks) .albums{visibility:hidden}
   </style>
+  <noscript><style>html:not(.is-ready) main,html:not(.is-tracks) .section-label,html:not(.is-tracks) .albums{visibility:visible}.mark,h1,h1 .word,p,.stamp,.albums,.albums li{opacity:1!important;animation:none!important}</style></noscript>
 </head>
 <body>
   <main>
-    <canvas class="mark" width="56" height="56" role="img" aria-label="iqad — animated dot face"></canvas>
     <h1 style="--delay: 80ms">Now</h1>
     <p class="stamp" id="stamp" style="--delay: 200ms">updated recently</p>
     <p style="--delay: 380ms">
@@ -245,35 +37,35 @@
       learning more about backend, hosting.
     </p>
     <p style="--delay: 620ms">
-      on the side, i love astronomy. my favorite planet is <a id="saturn-link" href="https://science.nasa.gov/gallery/saturn/" target="_blank" rel="noopener">Saturn</a><canvas class="saturn" width="32" height="32" aria-hidden="true"></canvas>.
+      on the side, i love astronomy. my favorite planet is <a id="saturn-link" href="https://science.nasa.gov/gallery/saturn/" target="_blank" rel="noopener">Saturn</a><canvas class="saturn" width="48" height="48" aria-hidden="true"></canvas>.
     </p>
     <p style="--delay: 740ms">
       i love listening to music and podcasts while working.
     </p>
-    <p class="section-label" style="--delay: 840ms">on repeat</p>
+    <p class="section-label">on repeat</p>
     <ul class="albums">
-      <li style="--delay: 920ms">
+      <li style="--delay: 80ms">
         <span class="idx">01</span>
-        <img class="cover" src="/assets/albums/emotions.jpg" alt="EMOTIONS by Nine Vicious" width="52" height="52" />
+        <img class="cover" src="/assets/albums/besties.jpg" alt="besties by 2facedlon" width="66" height="66" />
         <span class="meta">
-          <span class="track">EMOTIONS - <a class="song" href="https://open.spotify.com/search/Amazing%20Nine%20Vicious" target="_blank" rel="noopener">Amazing</a></span>
-          <span class="artist">Nine Vicious</span>
+          <span class="track"><a class="song" href="https://open.spotify.com/track/4gxD8rkjxbf8k6Hab9tEG3" target="_blank" rel="noopener">besties</a></span>
+          <span class="artist">2facedlon</span>
         </span>
       </li>
-      <li style="--delay: 1010ms">
+      <li style="--delay: 160ms">
         <span class="idx">02</span>
-        <img class="cover" src="/assets/albums/iceman.jpg" alt="ICEMAN by Drake" width="52" height="52" />
+        <img class="cover" src="/assets/albums/balance.jpg" alt="balan$e by fflex" width="66" height="66" />
         <span class="meta">
-          <span class="track">ICEMAN - <a class="song" href="https://open.spotify.com/search/Ran%20To%20Atlanta%20Drake" target="_blank" rel="noopener">Ran To Atlanta</a></span>
-          <span class="artist">Drake</span>
+          <span class="track"><a class="song" href="https://open.spotify.com/track/1o9hGmZNXPyWa5oOqg0hDl" target="_blank" rel="noopener">balan$e</a></span>
+          <span class="artist">fflex</span>
         </span>
       </li>
-      <li style="--delay: 1100ms">
+      <li style="--delay: 240ms">
         <span class="idx">03</span>
-        <img class="cover" src="/assets/albums/paranoia.jpg" alt="Paranoia by Marwick" width="52" height="52" />
+        <img class="cover" src="/assets/albums/rehab.jpg" alt="addicted / rehab by xtsy" width="66" height="66" />
         <span class="meta">
-          <span class="track">Paranoia - <a class="song" href="https://open.spotify.com/search/Narcolepsy%20Marwick" target="_blank" rel="noopener">Narcolepsy</a></span>
-          <span class="artist">Marwick</span>
+          <span class="track"><a class="song" href="https://open.spotify.com/track/6jgwYG8gO0sNxxJ9sFRtIR" target="_blank" rel="noopener">addicted / rehab</a></span>
+          <span class="artist">xtsy</span>
         </span>
       </li>
     </ul>
@@ -283,11 +75,28 @@
   </main>
 
   <script>
-    // ---- "updated X days ago" stamp -------------------------------------
+    (() => {
+      const html = document.documentElement;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const tracks = () => html.classList.add('is-tracks');
+      let armed = false;
+      const copy = () => {
+        html.classList.add('is-ready');
+        if (armed) return;
+        armed = true;
+        if (reduce) tracks();
+        else setTimeout(tracks, 1100);
+      };
+      const fail = setTimeout(copy, 1600);
+      const ready = (document.fonts && document.fonts.ready)
+        ? document.fonts.ready
+        : Promise.resolve();
+      ready.then(() => { clearTimeout(fail); copy(); }).catch(copy);
+    })();
     (() => {
       const el = document.getElementById('stamp');
       if (!el) return;
-      const LAST_UPDATED = '2026-05-28';        // <-- set this when you update the page
+      const LAST_UPDATED = '2026-09-04';
       const then = new Date(LAST_UPDATED + 'T00:00:00');
       const today = new Date();
       const days = Math.floor(
@@ -300,243 +109,161 @@
         'updated ' + days + ' days ago';
     })();
 
-    // ---- dot face — naps sometimes (now page) ---------------------------
-    (() => {
-      const canvas = document.querySelector('canvas.mark');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      const GRID = 12;
-      const SIZE = 56;
-      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
-      canvas.width = SIZE * dpr;
-      canvas.height = SIZE * dpr;
-      canvas.style.width = SIZE + 'px';
-      canvas.style.height = SIZE + 'px';
-      ctx.scale(dpr, dpr);
-
-      const cell = SIZE / GRID;
-      const radius = cell * 0.36;
-
-      const L_OPEN  = [[3,3],[4,3],[3,4],[4,4]];
-      const R_OPEN  = [[7,3],[8,3],[7,4],[8,4]];
-      const L_SHUT  = [[3,4],[4,4]];
-      const R_SHUT  = [[7,4],[8,4]];
-      const M_FLAT  = [[4,8],[5,8],[6,8],[7,8]];
-      const M_SMILE = [[3,7],[4,8],[5,9],[6,9],[7,8],[8,7]];
-      const M_SMALL = [[5,8],[6,8]];               // sleepy closed mouth
-      const M_SNORE = [[5,8],[6,8],[5,9],[6,9]];   // little open 'o' on inhale
-
-      const faces = {
-        awake: [...L_OPEN, ...R_OPEN, ...M_FLAT],
-        happy: [...L_OPEN, ...R_OPEN, ...M_SMILE],
-        wink:  [...L_OPEN, ...R_SHUT, ...M_SMILE],
-        blink: [...L_SHUT, ...R_SHUT, ...M_FLAT],
-      };
-
-      const target = new Float32Array(GRID * GRID);
-      const cur = new Float32Array(GRID * GRID);
-      const at = (c, r) => r * GRID + c;
-
-      function setTarget(cells) {
-        target.fill(0);
-        for (const [c, r] of cells) target[at(c, r)] = 1;
-      }
-
-      let mode = 'awake';    // 'awake' | 'sleep'
-      let hovering = false;
-      let sleepAmt = 0;      // eased 1 while asleep (drives the Zzz)
-
-      const zzz = [0, 0.34, 0.67];
-
-      function drawZ(x, y, s, a) {
-        const cells = [[0,0],[1,0],[2,0],[1,1],[0,2],[1,2],[2,2]];
-        ctx.fillStyle = 'rgba(255,255,255,' + a + ')';
-        for (const [gx, gy] of cells) {
-          ctx.beginPath();
-          ctx.arc(x + gx * s, y + gy * s, s * 0.42, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-
-      function render(bob) {
-        ctx.clearRect(0, 0, SIZE, SIZE);
-        for (let r = 0; r < GRID; r++) {
-          for (let c = 0; c < GRID; c++) {
-            const v = cur[at(c, r)];
-            if (v < 0.012) continue;
-            const rad = radius * (0.5 + 0.5 * v);
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(255,255,255,' + v + ')';
-            ctx.arc(c * cell + cell / 2, r * cell + cell / 2 + bob, rad, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-        // Zzz drift up-and-away to the upper-right, well clear of the head
-        if (sleepAmt > 0.02) {
-          const t = performance.now() / 2600;
-          for (const off of zzz) {
-            const p = (t + off) % 1;
-            const x = 43 + p * 11;
-            const y = 24 - p * 26;
-            const s = 1.5 + p * 1.5;
-            const a = sleepAmt * Math.sin(Math.PI * p) * 0.85;
-            if (a > 0.01) drawZ(x, y, s, a);
-          }
-        }
-      }
-
-      setTarget(faces.awake);
-
-      if (reduce) { cur.set(target); render(0); return; }
-
-      function tick() {
-        const now = performance.now() / 1000;
-        const breath = (Math.sin(now * 1.15) + 1) / 2;
-        const bob = Math.sin(now * 1.15) * 0.7;
-
-        sleepAmt += ((mode === 'sleep' ? 1 : 0) - sleepAmt) * 0.08;
-
-        if (mode === 'sleep') {
-          const mouth = breath > 0.62 ? M_SNORE : M_SMALL;
-          setTarget([...L_SHUT, ...R_SHUT, ...mouth]);
-        }
-
-        for (let i = 0; i < cur.length; i++) cur[i] += (target[i] - cur[i]) * 0.2;
-        render(mode === 'sleep' ? bob : bob * 0.3);
-        requestAnimationFrame(tick);
-      }
-      tick();
-
-      // little expressions while awake
-      function awakeIdle() {
-        if (mode === 'awake' && !hovering) {
-          const roll = Math.random();
-          if (roll < 0.55) {
-            setTarget(faces.blink);
-            setTimeout(() => { if (mode === 'awake' && !hovering) setTarget(faces.awake); }, 120);
-          } else if (roll < 0.8) {
-            setTarget(faces.happy);
-            setTimeout(() => { if (mode === 'awake' && !hovering) setTarget(faces.awake); }, 900);
-          } else {
-            setTarget(faces.wink);
-            setTimeout(() => { if (mode === 'awake' && !hovering) setTarget(faces.awake); }, 520);
-          }
-        }
-        setTimeout(awakeIdle, 1600 + Math.random() * 2600);
-      }
-      setTimeout(awakeIdle, 1600);
-
-      // autonomous nap cycle: awake ~10–16s, asleep ~9–16s
-      let cycle;
-      function scheduleCycle() {
-        clearTimeout(cycle);
-        const dur = mode === 'awake' ? 10000 + Math.random() * 6000
-                                     : 9000 + Math.random() * 7000;
-        cycle = setTimeout(() => {
-          if (!hovering) {
-            mode = mode === 'awake' ? 'sleep' : 'awake';
-            if (mode === 'awake') setTarget(faces.awake);
-          }
-          scheduleCycle();
-        }, dur);
-      }
-      scheduleCycle();
-
-      // interactions: wake on hover, startle on click
-      canvas.addEventListener('pointerenter', () => {
-        hovering = true; mode = 'awake'; setTarget(faces.happy);
-      });
-      canvas.addEventListener('pointerleave', () => {
-        hovering = false; setTarget(faces.awake); scheduleCycle();
-      });
-      canvas.addEventListener('pointerdown', () => {
-        mode = 'awake';
-        setTarget(faces.blink);
-        setTimeout(() => { if (mode === 'awake') setTarget(faces.happy); }, 150);
-      });
-    })();
-
-    // ---- dot Saturn — moon orbits on hover ------------------------------
     (() => {
       const canvas = document.querySelector('canvas.saturn');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const S = 32;
+      const W = 48, H = 48;
       const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
-      canvas.width = S * dpr;
-      canvas.height = S * dpr;
-      canvas.style.width = S + 'px';
-      canvas.style.height = S + 'px';
-      ctx.scale(dpr, dpr);
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.imageSmoothingEnabled = false;
 
-      const cx = S / 2, cy = S / 2;
-      const R = 6;              // planet radius
-      const rx = 12.5, ry = 4;  // ring (flat plane)
-      const mrx = 13, mry = 10; // moon orbit (steeper plane)
-      const dot = 0.95;
-      const N = 40;
+      const cx = 24, cy = 23;
+      const PR = 8;
+      const RXO = 22, RYO = 6;
+      const RXI = 13, RYI = 3.4;
+      const CXO = 17.4, CYO = 4.7;
+      const CXI = 15.8, CYI = 4.2;
+      const mrx = 20, mry = 10;
 
-      const body = [];
-      for (let y = -R; y <= R; y += 2.2)
-        for (let x = -R; x <= R; x += 2.2)
-          if (x * x + y * y <= R * R) body.push([x, y]);
-
-      function dotAt(x, y, a, r) {
-        ctx.beginPath();
-        ctx.fillStyle = 'rgba(255,255,255,' + a + ')';
-        ctx.arc(x, y, r || dot, 0, Math.PI * 2);
-        ctx.fill();
+      function inEll(dx, dy, rx, ry) {
+        return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1;
+      }
+      function inPlanet(dx, dy) {
+        return dx * dx + dy * dy <= PR * PR;
+      }
+      function shade(a) {
+        if (a < 0.12) return 0;
+        if (a >= 0.82) return 1;
+        if (a >= 0.52) return 0.7;
+        return 0.38;
+      }
+      function pix(x, y, a) {
+        const q = shade(a);
+        if (!q) return;
+        ctx.fillStyle = 'rgba(255,255,255,' + q + ')';
+        ctx.fillRect(x, y, 1, 1);
       }
 
-      let ringSpeed = 0.35, ringTarget = 0.35, ringPhase = 0;
-      let moonAmt = 0, moonTarget = 0, moonPhase = 0;
+      let ringSpeed = 0.28, ringTarget = 0.28, ringPhase = 0.6;
+      let moonAmt = 0, moonTarget = 0, moonPhase = 0.9;
       let last = 0;
+      const FRAME = 70;
+
+      function ringAt(x, y) {
+        const dx = x - cx, dy = y - cy;
+        if (!inEll(dx, dy, RXO, RYO) || inEll(dx, dy, RXI, RYI)) return 0;
+        if (inEll(dx, dy, CXO, CYO) && !inEll(dx, dy, CXI, CYI)) return 0;
+        const ang = Math.atan2(dy / RYO, dx / RXO);
+        const spark = Math.sin(ang * 8 + ringPhase * 5);
+        const front = dy > 0;
+        const base = front ? 0.95 : 0.42;
+        return spark > 0.2 ? Math.min(1, base + 0.22) : base * 0.68;
+      }
 
       function frame(t) {
-        const dt = last ? t - last : 16; last = t;
-        ringSpeed += (ringTarget - ringSpeed) * 0.07;
-        moonAmt   += (moonTarget - moonAmt) * 0.08;
-        ringPhase += (dt / 3200) * ringSpeed;
-        moonPhase += (dt / 2400) * (0.5 + 2.5 * moonAmt);
+        if (!reduce) requestAnimationFrame(frame);
+        const dt = last ? t - last : FRAME;
+        if (t - last < FRAME && last) return;
+        last = t || 1;
 
-        ctx.clearRect(0, 0, S, S);
+        ringSpeed += (ringTarget - ringSpeed) * 0.35;
+        moonAmt += (moonTarget - moonAmt) * 0.35;
+        moonAmt = Math.round(moonAmt * 4) / 4;
+        ringPhase += (dt / 2400) * ringSpeed;
+        moonPhase += (dt / 1700) * (0.4 + 2.4 * moonAmt);
 
-        const ringBack = [], ringFront = [];
-        for (let i = 0; i < N; i++) {
-          const a = (i / N) * Math.PI * 2 + ringPhase;
-          const x = cx + rx * Math.cos(a);
-          const y = cy + ry * Math.sin(a);
-          (Math.sin(a) > 0 ? ringFront : ringBack).push([x, y]);
+        ctx.clearRect(0, 0, W, H);
+
+        const moonX = Math.round(cx + mrx * Math.cos(moonPhase));
+        const moonY = Math.round(cy + mry * Math.sin(moonPhase));
+        const moonFront = Math.sin(moonPhase) > 0.1;
+
+        if (moonAmt > 0.15 && !moonFront) {
+          pix(moonX, moonY, 0.5 * moonAmt);
+          pix(moonX + 1, moonY, 0.5 * moonAmt);
+          pix(moonX, moonY + 1, 0.35 * moonAmt);
+          pix(moonX + 1, moonY + 1, 0.35 * moonAmt);
         }
 
-        const ma = moonPhase;
-        const mx = cx + mrx * Math.cos(ma);
-        const my = cy + mry * Math.sin(ma);
-        const moonFront = Math.sin(ma) > 0;
+        for (let y = 0; y < H; y++) {
+          for (let x = 0; x < W; x++) {
+            if (y - cy > 0) continue;
+            const a = ringAt(x, y);
+            if (!a) continue;
+            if (inPlanet(x - cx, y - cy)) continue;
+            pix(x, y, a);
+          }
+        }
 
-        for (const [x, y] of ringBack) dotAt(x, y, 0.3);
-        if (moonAmt > 0.02 && !moonFront) dotAt(mx, my, 0.4 * moonAmt, 1.4);
-        for (const [bx, by] of body) dotAt(cx + bx, cy + by, 0.92);
-        for (const [x, y] of ringFront) dotAt(x, y, 0.72);
-        if (moonAmt > 0.02 && moonFront) dotAt(mx, my, 0.95 * moonAmt, 1.5);
+        for (let y = 0; y < H; y++) {
+          for (let x = 0; x < W; x++) {
+            const dx = x - cx, dy = y - cy;
+            if (!inPlanet(dx, dy)) continue;
+            let light = 0.7 - (dx / PR) * 0.38 - (dy / PR) * 0.42;
+            if (Math.abs(dy) <= 1) light *= 0.42;
+            if (dx <= -3 && dy <= -3) light += 0.25;
+            pix(x, y, light);
+          }
+        }
 
-        if (!reduce) requestAnimationFrame(frame);
+        for (let y = 0; y < H; y++) {
+          for (let x = 0; x < W; x++) {
+            if (y - cy <= 0) continue;
+            const a = ringAt(x, y);
+            if (a) pix(x, y, a);
+          }
+        }
+
+        if (moonAmt > 0.15 && moonFront) {
+          pix(moonX, moonY, moonAmt);
+          pix(moonX + 1, moonY, moonAmt);
+          pix(moonX, moonY + 1, 0.72 * moonAmt);
+          pix(moonX + 1, moonY + 1, 0.72 * moonAmt);
+        }
       }
 
-      if (reduce) frame(0); else requestAnimationFrame(frame);
+      if (reduce) frame(0);
+      else requestAnimationFrame(frame);
 
       const link = document.getElementById('saturn-link');
-      const on  = () => { ringTarget = 3.2; moonTarget = 1; };
-      const off = () => { ringTarget = 0.35; moonTarget = 0; };
+      const on  = () => { ringTarget = 2.8; moonTarget = 1; };
+      const off = () => { ringTarget = 0.28; moonTarget = 0; };
       [canvas, link].forEach(el => {
         if (!el) return;
         el.addEventListener('pointerenter', on);
         el.addEventListener('pointerleave', off);
+      });
+    })();
+
+    (() => {
+      const CELLS = 22;
+      const OUT = 66;
+      const scratch = document.createElement('canvas');
+      scratch.width = CELLS;
+      scratch.height = CELLS;
+      const sctx = scratch.getContext('2d');
+      sctx.imageSmoothingEnabled = false;
+
+      function crush(img) {
+        if (img.dataset.crushed) return;
+        sctx.clearRect(0, 0, CELLS, CELLS);
+        sctx.drawImage(img, 0, 0, CELLS, CELLS);
+        img.src = scratch.toDataURL('image/png');
+        img.width = OUT;
+        img.height = OUT;
+        img.dataset.crushed = '1';
+      }
+
+      document.querySelectorAll('img.cover').forEach(img => {
+        if (img.complete && img.naturalWidth) crush(img);
+        else img.addEventListener('load', () => crush(img), { once: true });
       });
     })();
   </script>
