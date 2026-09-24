@@ -18,13 +18,13 @@
   <link rel="icon" type="image/png" href="/assets/iqad.png" />
   <link rel="canonical" href="https://iqad.me/now" />
   <link rel="preload" href="assets/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="site.css?v=10" />
+  <link rel="stylesheet" href="site.css?v=12" />
   <style>
     html:not(.is-ready) main{visibility:hidden}
-    html:not(.is-tracks) .section-label,
+    html:not(.is-loading) .section-label,
     html:not(.is-tracks) .albums{visibility:hidden}
   </style>
-  <noscript><style>html:not(.is-ready) main,html:not(.is-tracks) .section-label,html:not(.is-tracks) .albums{visibility:visible}.mark,h1,h1 .word,p,.stamp,.albums,.albums li{opacity:1!important;animation:none!important}</style></noscript>
+  <noscript><style>html:not(.is-ready) main,html:not(.is-loading) .section-label,html:not(.is-tracks) .albums{visibility:visible}.mark,h1,h1 .word,p,.stamp,.albums,.albums li{opacity:1!important;animation:none!important}</style></noscript>
 </head>
 <body>
   <main>
@@ -43,7 +43,14 @@
       i love listening to music and podcasts while working.
     </p>
     <p class="section-label">on repeat</p>
+    <div class="repeat">
+    <div class="loader" role="status">
+      <span></span>
+      <canvas class="cube" width="44" height="44" aria-hidden="true"></canvas>
+      <span class="loading">loading...</span>
+    </div>
     <ul class="albums">
+      <!-- tracks:start -->
       <li style="--delay: 80ms">
         <span class="idx">01</span>
         <img class="cover" src="/assets/albums/besties.jpg" alt="besties by 2facedlon" width="66" height="66" />
@@ -68,24 +75,38 @@
           <span class="artist">xtsy</span>
         </span>
       </li>
+      <!-- tracks:end -->
     </ul>
+    </div>
     <p style="--delay: 1260ms">
       <a href="/">← back</a>
     </p>
   </main>
 
+  <script src="site.js?v=1"></script>
   <script>
     (() => {
       const html = document.documentElement;
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+      const covers = Promise.all(
+        [...document.querySelectorAll('img.cover')].map(img => img.decode().catch(() => {}))
+      );
       const tracks = () => html.classList.add('is-tracks');
       let armed = false;
       const copy = () => {
         html.classList.add('is-ready');
         if (armed) return;
         armed = true;
-        if (reduce) tracks();
-        else setTimeout(tracks, 1100);
+        if (reduce) {
+          html.classList.add('is-loading');
+          tracks();
+          return;
+        }
+        wait(860).then(() => {
+          html.classList.add('is-loading');
+          return Promise.race([Promise.all([covers, wait(840)]), wait(4000)]);
+        }).then(tracks);
       };
       const fail = setTimeout(copy, 1600);
       const ready = (document.fonts && document.fonts.ready)
@@ -107,6 +128,119 @@
         days <= 0 ? 'updated today' :
         days === 1 ? 'updated yesterday' :
         'updated ' + days + ' days ago';
+    })();
+
+    (() => {
+      const canvas = document.querySelector('canvas.cube');
+      if (!canvas) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const html = document.documentElement;
+      const ctx = canvas.getContext('2d');
+
+      const W = 44, H = 44;
+      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const S = 9, TILT = 0.6, STEP = Math.PI / 12, FRAME = 70;
+      const cx = 22, cy = 21, FLOOR = 40, HOP = 4;
+      const QUARTER = Math.PI / 2;
+
+      const V = [];
+      for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) V.push([x, y, z]);
+      const FACES = [
+        { v: [4, 5, 7, 6], n: [1, 0, 0] },
+        { v: [0, 1, 3, 2], n: [-1, 0, 0] },
+        { v: [2, 3, 7, 6], n: [0, 1, 0] },
+        { v: [0, 1, 5, 4], n: [0, -1, 0] },
+        { v: [1, 3, 7, 5], n: [0, 0, 1] },
+        { v: [0, 2, 6, 4], n: [0, 0, -1] },
+      ];
+      const LIGHT = (() => {
+        const l = [-0.4, 0.7, 0.6];
+        const m = Math.hypot(...l);
+        return l.map(c => c / m);
+      })();
+
+      function rotate([x, y, z], a) {
+        const rx = x * Math.cos(a) + z * Math.sin(a);
+        const rz = -x * Math.sin(a) + z * Math.cos(a);
+        return [rx, y * Math.cos(TILT) - rz * Math.sin(TILT), y * Math.sin(TILT) + rz * Math.cos(TILT)];
+      }
+      function pix(x, y, a) {
+        ctx.fillStyle = 'rgba(255,255,255,' + a + ')';
+        ctx.fillRect(x, y, 1, 1);
+      }
+      function line([x0, y0], [x1, y1]) {
+        x0 = Math.round(x0); y0 = Math.round(y0);
+        x1 = Math.round(x1); y1 = Math.round(y1);
+        const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0);
+        const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+        let err = dx + dy;
+        for (;;) {
+          pix(x0, y0, 1);
+          if (x0 === x1 && y0 === y1) return;
+          const e2 = 2 * err;
+          if (e2 >= dy) { err += dy; x0 += sx; }
+          if (e2 <= dx) { err += dx; y0 += sy; }
+        }
+      }
+      function inside(px, py, q) {
+        let sign = 0;
+        for (let i = 0; i < 4; i++) {
+          const [ax, ay] = q[i], [bx, by] = q[(i + 1) % 4];
+          const c = (bx - ax) * (py - ay) - (by - ay) * (px - ax);
+          if (c === 0) continue;
+          if (sign && Math.sign(c) !== sign) return false;
+          sign = Math.sign(c);
+        }
+        return true;
+      }
+
+      function draw(phase) {
+        ctx.clearRect(0, 0, W, H);
+        const t = (phase % QUARTER) / QUARTER;
+        const hop = Math.round(Math.sin(t * Math.PI) * HOP);
+
+        const shadow = 9 - hop;
+        for (let x = cx - shadow; x < cx + shadow; x++) pix(x, FLOOR, 0.38);
+
+        const pts = V.map(v => {
+          const [x, y] = rotate(v.map(c => c * S), phase);
+          return [cx + x, cy - hop - y];
+        });
+        const visible = FACES
+          .map(f => ({ q: f.v.map(i => pts[i]), n: rotate(f.n, phase) }))
+          .filter(f => f.n[2] > 0.001);
+
+        for (const f of visible) {
+          const d = f.n[0] * LIGHT[0] + f.n[1] * LIGHT[1] + f.n[2] * LIGHT[2];
+          const a = d > 0.75 ? 0.7 : d > 0.2 ? 0.38 : 0.16;
+          for (let y = 0; y < H; y++) {
+            for (let x = 0; x < W; x++) {
+              if (inside(x + 0.5, y + 0.5, f.q)) pix(x, y, a);
+            }
+          }
+        }
+        for (const f of visible) {
+          for (let i = 0; i < 4; i++) line(f.q[i], f.q[(i + 1) % 4]);
+        }
+      }
+
+      let phase = 0, last = 0;
+      function tick(t) {
+        if (html.classList.contains('is-tracks')) return;
+        requestAnimationFrame(tick);
+        if (!html.classList.contains('is-loading')) return;
+        if (last && t - last < FRAME) return;
+        last = t;
+        draw(phase);
+        phase += STEP;
+      }
+      requestAnimationFrame(tick);
     })();
 
     (() => {
@@ -243,22 +377,45 @@
     })();
 
     (() => {
-      const CELLS = 22;
+      const LEVELS = [22, 33, 44];
       const OUT = 66;
+      const FRAME = 70;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const scratch = document.createElement('canvas');
-      scratch.width = CELLS;
-      scratch.height = CELLS;
       const sctx = scratch.getContext('2d');
-      sctx.imageSmoothingEnabled = false;
+
+      function sample(img, cells) {
+        scratch.width = cells;
+        scratch.height = cells;
+        sctx.imageSmoothingEnabled = false;
+        sctx.drawImage(img, 0, 0, cells, cells);
+        return scratch.toDataURL('image/png');
+      }
 
       function crush(img) {
         if (img.dataset.crushed) return;
-        sctx.clearRect(0, 0, CELLS, CELLS);
-        sctx.drawImage(img, 0, 0, CELLS, CELLS);
-        img.src = scratch.toDataURL('image/png');
+        img.dataset.crushed = '1';
+        const frames = [...LEVELS.map(n => sample(img, n)), img.currentSrc || img.src];
+        img.src = frames[0];
         img.width = OUT;
         img.height = OUT;
-        img.dataset.crushed = '1';
+
+        let level = 0, timer = 0;
+        const go = (to) => {
+          clearTimeout(timer);
+          if (reduce) { level = to; img.src = frames[level]; return; }
+          const tick = () => {
+            if (level === to) return;
+            level += level < to ? 1 : -1;
+            img.src = frames[level];
+            timer = setTimeout(tick, FRAME);
+          };
+          tick();
+        };
+
+        const row = img.closest('li');
+        row.addEventListener('pointerenter', () => go(frames.length - 1));
+        row.addEventListener('pointerleave', () => go(0));
       }
 
       document.querySelectorAll('img.cover').forEach(img => {

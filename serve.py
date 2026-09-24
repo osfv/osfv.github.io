@@ -31,4 +31,6 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    ThreadingHTTPServer(("127.0.0.1", 8765), Handler).serve_forever()
+    server = ThreadingHTTPServer(("127.0.0.1", 8765), Handler)
+    print("serving on http://127.0.0.1:8765  (ctrl+c to stop)", flush=True)
+    server.serve_forever()
