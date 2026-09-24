@@ -18,13 +18,12 @@
   <link rel="icon" type="image/png" href="/assets/iqad.png" />
   <link rel="canonical" href="https://iqad.me/now" />
   <link rel="preload" href="assets/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="site.css?v=12" />
+  <link rel="stylesheet" href="site.css?v=13" />
   <style>
     html:not(.is-ready) main{visibility:hidden}
-    html:not(.is-loading) .section-label,
-    html:not(.is-tracks) .albums{visibility:hidden}
+    html:not(.is-loading) .player{visibility:hidden}
   </style>
-  <noscript><style>html:not(.is-ready) main,html:not(.is-loading) .section-label,html:not(.is-tracks) .albums{visibility:visible}.mark,h1,h1 .word,p,.stamp,.albums,.albums li{opacity:1!important;animation:none!important}</style></noscript>
+  <noscript><style>html:not(.is-ready) main{visibility:visible}.mark,h1,h1 .word,p,.stamp{opacity:1!important;animation:none!important}</style></noscript>
 </head>
 <body>
   <main>
@@ -40,44 +39,49 @@
       on the side, i love astronomy. my favorite planet is <a id="saturn-link" href="https://science.nasa.gov/gallery/saturn/" target="_blank" rel="noopener">Saturn</a><canvas class="saturn" width="48" height="48" aria-hidden="true"></canvas>.
     </p>
     <p style="--delay: 740ms">
-      i love listening to music and podcasts while working.
+      i love listening to music and podcasts while working. lately it's mostly these:
     </p>
-    <p class="section-label">on repeat</p>
-    <div class="repeat">
-    <div class="loader" role="status">
-      <span></span>
-      <canvas class="cube" width="44" height="44" aria-hidden="true"></canvas>
-      <span class="loading">loading...</span>
+    <div class="player" hidden>
+      <div class="screen" aria-hidden="true">
+        <div class="art-slot">
+          <canvas class="art"></canvas>
+          <canvas class="cube" width="44" height="44"></canvas>
+        </div>
+        <div class="readout">
+          <div class="readout-top">
+            <span class="readout-pos">♪ --/--</span>
+            <canvas class="eq"></canvas>
+            <span class="readout-time"></span>
+          </div>
+          <div class="readout-title"><span class="loading">loading...</span></div>
+          <div class="readout-artist"></div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="key" type="button" data-step="-1" aria-label="previous song">←</button>
+        <button class="key" type="button" data-step="1" aria-label="next song">→</button>
+        <a class="listen" href="https://open.spotify.com" target="_blank" rel="noopener">listen ↗</a>
+      </div>
     </div>
-    <ul class="albums">
+    <ol class="tracks">
       <!-- tracks:start -->
-      <li style="--delay: 80ms">
-        <span class="idx">01</span>
-        <img class="cover" src="/assets/albums/4UyE3xTsvuyovBIODvhDV0.jpg" alt="vamp city (with OsamaSon) by Ken Carson, OsamaSon" width="66" height="66" />
-        <span class="meta">
-          <span class="track"><a class="song" href="https://open.spotify.com/track/4UyE3xTsvuyovBIODvhDV0" target="_blank" rel="noopener">vamp city (with OsamaSon)</a></span>
-          <span class="artist">Ken Carson, OsamaSon</span>
-        </span>
+      <li data-time="">
+        <img src="/assets/albums/4UyE3xTsvuyovBIODvhDV0.jpg" alt="" width="66" height="66" />
+        <a class="song" href="https://open.spotify.com/track/4UyE3xTsvuyovBIODvhDV0" target="_blank" rel="noopener">vamp city</a>
+        <span class="artist">Ken Carson, OsamaSon</span>
       </li>
-      <li style="--delay: 160ms">
-        <span class="idx">02</span>
-        <img class="cover" src="/assets/albums/4d88MGCEqzFp70UsgJcZhn.jpg" alt="One Beer by Nine Vicious" width="66" height="66" />
-        <span class="meta">
-          <span class="track"><a class="song" href="https://open.spotify.com/track/4d88MGCEqzFp70UsgJcZhn" target="_blank" rel="noopener">One Beer</a></span>
-          <span class="artist">Nine Vicious</span>
-        </span>
+      <li data-time="">
+        <img src="/assets/albums/4d88MGCEqzFp70UsgJcZhn.jpg" alt="" width="66" height="66" />
+        <a class="song" href="https://open.spotify.com/track/4d88MGCEqzFp70UsgJcZhn" target="_blank" rel="noopener">One Beer</a>
+        <span class="artist">Nine Vicious</span>
       </li>
-      <li style="--delay: 240ms">
-        <span class="idx">03</span>
-        <img class="cover" src="/assets/albums/1FwKIjYTe6ri9DgBMfYI3g.jpg" alt="9 bitches (with ApolloRed1 ) by Ken Carson, ApolloRed1" width="66" height="66" />
-        <span class="meta">
-          <span class="track"><a class="song" href="https://open.spotify.com/track/1FwKIjYTe6ri9DgBMfYI3g" target="_blank" rel="noopener">9 bitches (with ApolloRed1 )</a></span>
-          <span class="artist">Ken Carson, ApolloRed1</span>
-        </span>
+      <li data-time="">
+        <img src="/assets/albums/1FwKIjYTe6ri9DgBMfYI3g.jpg" alt="" width="66" height="66" />
+        <a class="song" href="https://open.spotify.com/track/1FwKIjYTe6ri9DgBMfYI3g" target="_blank" rel="noopener">9 bitches</a>
+        <span class="artist">Ken Carson, ApolloRed1</span>
       </li>
       <!-- tracks:end -->
-    </ul>
-    </div>
+    </ol>
     <p style="--delay: 1260ms">
       <a href="/">← back</a>
     </p>
@@ -90,9 +94,12 @@
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const wait = ms => new Promise(r => setTimeout(r, ms));
       const covers = Promise.all(
-        [...document.querySelectorAll('img.cover')].map(img => img.decode().catch(() => {}))
+        [...document.querySelectorAll('.tracks img')].map(img => img.decode().catch(() => {}))
       );
-      const tracks = () => html.classList.add('is-tracks');
+      const tracks = () => {
+        html.classList.add('is-tracks');
+        document.dispatchEvent(new Event('tracks'));
+      };
       let armed = false;
       const copy = () => {
         html.classList.add('is-ready');
@@ -377,51 +384,225 @@
     })();
 
     (() => {
-      const LEVELS = [22, 33, 44];
-      const OUT = 66;
-      const FRAME = 70;
+      const html = document.documentElement;
+      const player = document.querySelector('.player');
+      const list = document.querySelector('.tracks');
+      if (!player || !list) return;
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const tracks = [...list.querySelectorAll('li')].map(li => ({
+        img: li.querySelector('img'),
+        title: li.querySelector('.song').textContent.trim(),
+        href: li.querySelector('.song').href,
+        artist: li.querySelector('.artist').textContent.trim(),
+        time: li.dataset.time || '',
+      }));
+      if (!tracks.length) return;
+
+      player.hidden = false;
+      list.classList.add('sr-only');
+      list.querySelectorAll('a').forEach(a => { a.tabIndex = -1; });
+
+      const $ = s => player.querySelector(s);
+      const art = $('.art'), eq = $('.eq'), pos = $('.readout-pos'), time = $('.readout-time');
+      const title = $('.readout-title'), artist = $('.readout-artist'), listen = $('.listen');
+
+      const FRAME = 70;
+      const GLYPHS = 'abcdefghijklmnopqrstuvwxyz0123456789#$%&*+=?';
+      const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      const pad = n => String(n).padStart(2, '0');
+
+      let index = 0, artIndex = 0, booted = false, awake = false;
+
+      // cover art: 0 = chunkiest, 1 = resting, 2 = fine, 3 = original
+      const LOW = 0, REST = 1, SHARP = 3;
+      const actx = art.getContext('2d');
       const scratch = document.createElement('canvas');
       const sctx = scratch.getContext('2d');
+      let size = 0, level = LOW, target = LOW, artTimer = 0, switching = false;
 
-      function sample(img, cells) {
-        scratch.width = cells;
-        scratch.height = cells;
+      function fit() {
+        size = art.clientWidth;
+        art.width = size * dpr;
+        art.height = size * dpr;
+        actx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function paint() {
+        const img = tracks[artIndex].img;
+        actx.clearRect(0, 0, size, size);
+        if (!booted || !img.naturalWidth) return;
+        const cells = [11, size / 3, size][level];
+        if (!cells) {
+          actx.imageSmoothingEnabled = true;
+          actx.drawImage(img, 0, 0, size, size);
+          return;
+        }
+        scratch.width = scratch.height = cells;
         sctx.imageSmoothingEnabled = false;
         sctx.drawImage(img, 0, 0, cells, cells);
-        return scratch.toDataURL('image/png');
+        actx.imageSmoothingEnabled = false;
+        actx.drawImage(scratch, 0, 0, size, size);
       }
-
-      function crush(img) {
-        if (img.dataset.crushed) return;
-        img.dataset.crushed = '1';
-        const frames = [...LEVELS.map(n => sample(img, n)), img.currentSrc || img.src];
-        img.src = frames[0];
-        img.width = OUT;
-        img.height = OUT;
-
-        let level = 0, timer = 0;
-        const go = (to) => {
-          clearTimeout(timer);
-          if (reduce) { level = to; img.src = frames[level]; return; }
-          const tick = () => {
-            if (level === to) return;
-            level += level < to ? 1 : -1;
-            img.src = frames[level];
-            timer = setTimeout(tick, FRAME);
-          };
-          tick();
+      function stepArt(done) {
+        clearTimeout(artTimer);
+        if (reduce) level = target;
+        const tick = () => {
+          if (level !== target) level += level < target ? 1 : -1;
+          paint();
+          if (level !== target) artTimer = setTimeout(tick, FRAME);
+          else if (done) done();
         };
-
-        const row = img.closest('li');
-        row.addEventListener('pointerenter', () => go(frames.length - 1));
-        row.addEventListener('pointerleave', () => go(0));
+        tick();
+      }
+      const settle = () => (awake ? SHARP : REST);
+      function switchArt() {
+        switching = true;
+        target = LOW;
+        stepArt(() => {
+          artIndex = index;
+          paint();
+          artTimer = setTimeout(() => {
+            switching = false;
+            target = settle();
+            stepArt();
+          }, reduce ? 0 : FRAME);
+        });
       }
 
-      document.querySelectorAll('img.cover').forEach(img => {
-        if (img.complete && img.naturalWidth) crush(img);
-        else img.addEventListener('load', () => crush(img), { once: true });
+      // readout text
+      const typing = new Map();
+      let marquee = 0;
+      function typeIn(el, text) {
+        clearTimeout(typing.get(el));
+        const chars = [...text];
+        let f = 0;
+        const tick = () => {
+          f++;
+          const settled = reduce ? chars.length : Math.floor(chars.length * f / 6);
+          el.textContent = chars.map((ch, i) =>
+            i < settled || ch === ' ' ? ch : GLYPHS[Math.random() * GLYPHS.length | 0]
+          ).join('');
+          if (settled < chars.length) typing.set(el, setTimeout(tick, 50));
+          else {
+            typing.delete(el);
+            if (el === title && awake) startMarquee();
+          }
+        };
+        tick();
+      }
+      function stopMarquee() {
+        clearTimeout(marquee);
+        title.classList.remove('is-scrolling');
+        if (booted && !typing.has(title)) title.textContent = tracks[index].title;
+      }
+      function startMarquee() {
+        stopMarquee();
+        if (reduce || typing.has(title)) return;
+        if (title.scrollWidth <= title.clientWidth) return;
+        const loop = [...(tracks[index].title + '    ')];
+        let k = 0;
+        title.classList.add('is-scrolling');
+        const tick = () => {
+          k = (k + 1) % loop.length;
+          title.textContent = loop.slice(k).concat(loop.slice(0, k)).join('');
+          marquee = setTimeout(tick, k === 0 ? 1400 : 180);
+        };
+        marquee = setTimeout(tick, 900);
+      }
+
+      // equalizer
+      const EW = 46, EH = 16, BARS = 8;
+      const ectx = eq.getContext('2d');
+      eq.width = EW * dpr;
+      eq.height = EH * dpr;
+      eq.style.width = EW + 'px';
+      eq.style.height = EH + 'px';
+      ectx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const bars = reduce ? [3, 5, 2, 6, 4, 7, 3, 5] : new Array(BARS).fill(1);
+      const goals = bars.slice();
+      let eqTimer = 0;
+      function drawEq() {
+        ectx.clearRect(0, 0, EW, EH);
+        bars.forEach((h, i) => {
+          ectx.fillStyle = 'rgba(255,255,255,.38)';
+          ectx.fillRect(i * 6, EH - h * 2, 4, h * 2);
+          ectx.fillStyle = 'rgba(255,255,255,.94)';
+          ectx.fillRect(i * 6, EH - h * 2, 4, 2);
+        });
+      }
+      function eqTick() {
+        eqTimer = 0;
+        let moving = false;
+        for (let i = 0; i < BARS; i++) {
+          if (!awake) goals[i] = 1;
+          else if (bars[i] === goals[i] || Math.random() < 0.3) goals[i] = 1 + (Math.random() * 8 | 0);
+          const d = goals[i] - bars[i];
+          bars[i] += Math.sign(d) * Math.min(2, Math.abs(d));
+          if (bars[i] !== 1 || awake) moving = true;
+        }
+        drawEq();
+        if (moving) eqTimer = setTimeout(eqTick, 140);
+      }
+      drawEq();
+
+      // tracks
+      function show(i) {
+        index = (i + tracks.length) % tracks.length;
+        const t = tracks[index];
+        pos.textContent = '♪ ' + pad(index + 1) + '/' + pad(tracks.length);
+        time.textContent = t.time;
+        listen.href = t.href;
+        stopMarquee();
+        typeIn(title, t.title);
+        typeIn(artist, t.artist);
+        switchArt();
+      }
+      function setAwake(on) {
+        if (awake === on) return;
+        awake = on;
+        player.classList.toggle('is-awake', on);
+        if (!booted) return;
+        if (!switching) { target = settle(); stepArt(); }
+        if (on) startMarquee(); else stopMarquee();
+        if (!reduce && !eqTimer) eqTick();
+      }
+
+      let sleepTimer = 0;
+      player.addEventListener('pointerenter', e => {
+        if (e.pointerType === 'mouse') setAwake(true);
       });
+      player.addEventListener('pointerleave', e => {
+        if (e.pointerType === 'mouse' && !player.querySelector(':focus-visible')) setAwake(false);
+      });
+      player.addEventListener('pointerdown', e => {
+        if (e.pointerType === 'mouse') return;
+        setAwake(true);
+        clearTimeout(sleepTimer);
+        sleepTimer = setTimeout(() => setAwake(false), 6000);
+      });
+      player.addEventListener('focusin', () => setAwake(true));
+      player.addEventListener('focusout', e => {
+        if (!player.contains(e.relatedTarget) && !player.matches(':hover')) setAwake(false);
+      });
+      player.addEventListener('keydown', e => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault();
+        show(index + (e.key === 'ArrowLeft' ? -1 : 1));
+      });
+      player.querySelectorAll('.key').forEach(key => {
+        key.addEventListener('click', () => show(index + Number(key.dataset.step)));
+      });
+
+      new ResizeObserver(() => { fit(); paint(); }).observe(art);
+
+      function boot() {
+        if (booted) return;
+        booted = true;
+        fit();
+        show(0);
+      }
+      document.addEventListener('tracks', boot);
+      if (html.classList.contains('is-tracks')) boot();
     })();
   </script>
 </body>

@@ -60,18 +60,27 @@ def save_cover(track):
     return name
 
 
-def row(i, track, cover):
-    title = html.escape(track["name"])
-    artist = html.escape(", ".join(a["name"] for a in track["artists"]))
+def clean_title(name, artists):
+    """Drop "(with X)" / "(feat. X)" when X is already on the artist line."""
+    guests = [a.lower() for a in artists[1:]]
+
+    def drop(m):
+        return "" if any(g in m.group(0).lower() for g in guests) else m.group(0)
+
+    return re.sub(r"\s*[(\[](?:with|feat\.?|ft\.?)\s[^)\]]*[)\]]", drop, name, flags=re.I).strip()
+
+
+def row(track, cover):
+    names = [a["name"] for a in track["artists"]]
+    title = html.escape(clean_title(track["name"], names))
+    artist = html.escape(", ".join(names))
     link = html.escape(track["external_urls"]["spotify"])
+    minutes, seconds = divmod(round(track["duration_ms"] / 1000), 60)
     return (
-        f'      <li style="--delay: {80 * (i + 1)}ms">\n'
-        f'        <span class="idx">{i + 1:02}</span>\n'
-        f'        <img class="cover" src="/assets/albums/{cover}" alt="{title} by {artist}" width="66" height="66" />\n'
-        f'        <span class="meta">\n'
-        f'          <span class="track"><a class="song" href="{link}" target="_blank" rel="noopener">{title}</a></span>\n'
-        f'          <span class="artist">{artist}</span>\n'
-        f'        </span>\n'
+        f'      <li data-time="{minutes}:{seconds:02}">\n'
+        f'        <img src="/assets/albums/{cover}" alt="" width="66" height="66" />\n'
+        f'        <a class="song" href="{link}" target="_blank" rel="noopener">{title}</a>\n'
+        f'        <span class="artist">{artist}</span>\n'
         f'      </li>'
     )
 
@@ -83,7 +92,7 @@ def main():
 
     COVERS.mkdir(parents=True, exist_ok=True)
     covers = [save_cover(t) for t in tracks]
-    rows = "\n".join(row(i, t, c) for i, (t, c) in enumerate(zip(tracks, covers)))
+    rows = "\n".join(row(t, c) for t, c in zip(tracks, covers))
 
     page = PAGE.read_text(encoding="utf-8")
     block = re.compile(re.escape(START) + ".*?" + re.escape(END), re.S)
